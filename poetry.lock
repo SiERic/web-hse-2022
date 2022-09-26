@@ -109,6 +109,14 @@ typing-extensions = {version = ">=3.10.0", markers = "python_version < \"3.10\""
 full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
+name = "tinydb"
+version = "4.7.0"
+description = "TinyDB is a tiny, document oriented database optimized for your happiness :)"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
 name = "typing-extensions"
 version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -134,7 +142,7 @@ standard = ["colorama (>=0.4)", "httptools (>=0.4.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9689a3925f85cca4abbe1e2f7571f8fe5ecad0f9f50e1250f2189847a43127ac"
+content-hash = "ccd2e491556d8d3ddaa45913985d5757942de6db1538c20db08c512535695424"
 
 [metadata.files]
 anyio = [
@@ -206,6 +214,10 @@ sniffio = [
 starlette = [
     {file = "starlette-0.20.4-py3-none-any.whl", hash = "sha256:c0414d5a56297d37f3db96a84034d61ce29889b9eaccf65eb98a0b39441fcaa3"},
     {file = "starlette-0.20.4.tar.gz", hash = "sha256:42fcf3122f998fefce3e2c5ad7e5edbf0f02cf685d646a83a08d404726af5084"},
+]
+tinydb = [
+    {file = "tinydb-4.7.0-py3-none-any.whl", hash = "sha256:e2cdf6e2dad49813e9b5fceb3c7943387309a8738125fbff0b58d248a033f7a9"},
+    {file = "tinydb-4.7.0.tar.gz", hash = "sha256:357eb7383dee6915f17b00596ec6dd2a890f3117bf52be28a4c516aeee581100"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},

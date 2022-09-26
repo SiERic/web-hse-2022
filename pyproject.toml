@@ -10,6 +10,7 @@ packages = [{include = "web_hse_2022"}]
 python = "^3.8"
 fastapi = "^0.85.0"
 uvicorn = "^0.18.3"
+tinydb = "^4.7.0"
 
 
 [build-system]
