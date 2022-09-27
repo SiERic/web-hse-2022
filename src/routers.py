@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response,  status
+from fastapi import APIRouter, Response, status
 
 from src import contracts
 from src.repository.meme_repository_impl import MemeRepositoryImpl
@@ -43,4 +43,19 @@ async def get_meme_by_id(id: int, response: Response):
     else:
         return {"text": mem[0].text}
 
+
 repository = MemeRepositoryImpl(True)
+
+
+@router.get("/meme_hashtag/{hashtag_text}")
+async def get_memes_by_hashtag(hashtag_text: str, response: Response):
+    hashtag_id = repository.get_hashtag_by_text(hashtag_text)
+    if len(hashtag_id) == 0:
+        return {"memes": []}
+    elif len(hashtag_id) > 1:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return {"text": "Multiple record with the same id"}
+    else:
+        meme_ids = repository.get_meme_ids_linked_to_hashtag(hashtag_id[0].id)
+        memes = repository.get_memes_by_ids(meme_ids)
+        return {"memes": list(map(lambda x: x.text, memes))}
