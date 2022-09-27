@@ -69,7 +69,35 @@ def add_content_to_db():
     ''', file=f_meme_hashtag)
 
 
-def test_add_get_meme():
+def test_get_meme():
     memes = repository.get_meme_by_id(1)
     assert len(memes) == 1
-    assert memes[0].text == "Глава днр Денис Пушилин издал закон, запрещающий менять местами первые буквы его имени и фамилии"
+    assert memes[
+               0].text == "Глава днр Денис Пушилин издал закон, запрещающий менять местами первые буквы его имени и фамилии"
+
+
+def test_meme_number():
+    assert repository.get_meme_last_id() == 4
+
+
+def test_hashtag_number():
+    assert repository.get_hashtag_last_id() == 6
+
+
+def test_get_memes_by_hashtag():
+    assert sorted(repository.get_meme_ids_linked_to_hashtag(1)) == [1, 2, 4]
+    assert sorted(repository.get_meme_ids_linked_to_hashtag(2)) == [2]
+    assert sorted(repository.get_meme_ids_linked_to_hashtag(7)) == []
+
+
+def test_add_and_get_meme():
+    text = '''
+— В России отменён масочный режим.
+— И введён тоталитарный.
+— Что?
+— Что?'''
+    repository.add_meme(text, ["твиттер", "каламбур", "политика"])
+    assert repository.get_meme_by_id(5)[0].text == text
+    hashtag = repository.get_hashtag_by_text("политика")[0]
+    assert hashtag.text == "политика"
+    assert repository.get_meme_ids_linked_to_hashtag(hashtag.id) == [5]
