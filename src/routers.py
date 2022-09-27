@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Response,  status
 
-from app import contracts
-from tinydb import Query
-
-from app.db import set_db
+from src import contracts
+from src.repository.meme_repository_impl import MemeRepositoryImpl
 
 router = APIRouter()
 
@@ -35,7 +33,7 @@ async def get_frog(frog_request: contracts.Frog):
 
 @router.get("/meme/{id}")
 async def get_meme_by_id(id: int, response: Response):
-    mem = meme.search(Query()["id"] == id)
+    mem = repository.get_meme_by_id(id)
     if len(mem) == 0:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"text": f"Meme with id = {id} does not exist"}
@@ -43,6 +41,6 @@ async def get_meme_by_id(id: int, response: Response):
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"text": "Multiple record with the same id"}
     else:
-        return {"text": mem[0]["text"]}
+        return {"text": mem[0].text}
 
-meme, hashtag, meme_hashtag = set_db()
+repository = MemeRepositoryImpl(True)
