@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message Null {}
+
+message FrogRequest {
+  string continent = 1;
+  string gender = 2;
+}
+
+message Frog {
+  string name = 1;
+  string species = 2;
+  string gender = 3;
+  string continent = 4;
+}
+
+service FrogGivingService {
+  rpc Health(Null) returns (Null);
+  rpc GetFrog(FrogRequest) returns (Frog);
+}
