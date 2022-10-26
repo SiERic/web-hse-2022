@@ -1,9 +1,19 @@
+import logging
 import pickle
+import sys
 
 import pika as pika
 import redis as redis
 from fastapi import APIRouter
 from pydantic import BaseModel
+from logging import StreamHandler, Formatter
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+handler = StreamHandler(stream=sys.stdout)
+handler.setFormatter(Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
+logger.addHandler(handler)
 
 router = APIRouter()
 
@@ -24,26 +34,33 @@ def send_meme(meme: str, id: int):
         )
     )
     channel = connection.channel()
+    # channel.exchange_declare("memes", exchange_type="fanout")
     channel.queue_declare(queue="memes", durable=True)
+
+    logger.info("Open connection")
+
     channel.basic_publish(
-        exchange="fanout",
+        exchange="memes",
         routing_key="memes",
         body=pickle.dumps((meme, id)),
         properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE),
     )
     connection.close()
+    logger.info("Close connection")
 
 
 class Meme(BaseModel):
     text: str
 
 
-@router.post("/meme/push")
+@router.post("/meme/push/")
 async def push_meme(meme: Meme):
+    logger.info('New meme push request, test: "%s"', meme.text)
     id = get_id()
     db = redis.Redis()
     db.set(id, 0)
     send_meme(meme.text, id)
+    logger.info("Meme successfully sent, id = %d", id)
     return id
 
 

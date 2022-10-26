@@ -15,7 +15,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "text": "Надел мужик шляпу, а она ему как раз"
+  "text": "Надел мужик шляпуR, а она ему как раз"
 }
 
 ###
