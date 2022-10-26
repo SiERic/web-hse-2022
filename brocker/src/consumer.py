@@ -18,7 +18,8 @@ logger.addHandler(handler)
 def callback(ch, method, properties, body):
     (text, id) = pickle.loads(body)
     logger.debug('Got new meme to rate, text: "%s", id: %d', text, id)
-    rate = input(f"Rate this meme (id: {id}): (0/1)\n{text}\n").rstrip()
+    print(f"Rate this meme (0/1, 1 = like)\n(id: {id}): {text}")
+    rate = input().rstrip()
     while rate not in "01":
         rate = input("Rate should be 1 (like) or 0 (not like)").rstrip()
     logger.debug("Meme successfully rated, rate: %s", rate)
@@ -26,7 +27,6 @@ def callback(ch, method, properties, body):
         db = redis.Redis()
         db.incr(id, 1)
         logger.debug("Meme (id=%d) rating increased")
-    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 if __name__ == '__main__':
@@ -38,10 +38,14 @@ if __name__ == '__main__':
     )
 
     channel = connection.channel()
-    # channel.exchange_declare("memes", exchange_type="fanout")
-    channel.queue_declare(queue="memes", durable=True)
 
-    channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue="memes", on_message_callback=callback)
+    channel.exchange_declare(exchange="memes", exchange_type="fanout")
+    queue = channel.queue_declare(queue="", durable=True)
+    queue_name = queue.method.queue
+    channel.queue_bind(exchange="memes", queue=queue_name)
+
+    channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+
+    print("CONGRATULATIONS !!! YOU ARE A MEME RATER !!!")
 
     channel.start_consuming()

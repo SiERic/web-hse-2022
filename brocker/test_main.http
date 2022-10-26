@@ -15,11 +15,11 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "text": "Надел мужик шляпуR, а она ему как раз"
+  "text": "Надел мужик шляпу, а она ему как раз"
 }
 
 ###
 
-GET http://127.0.0.1:8000/meme/rating/5
+GET http://127.0.0.1:8000/meme/rating/2
 Accept: application/json
 

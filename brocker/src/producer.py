@@ -34,16 +34,15 @@ def send_meme(meme: str, id: int):
         )
     )
     channel = connection.channel()
-    # channel.exchange_declare("memes", exchange_type="fanout")
+    channel.exchange_declare(exchange="memes", exchange_type="fanout")
     channel.queue_declare(queue="memes", durable=True)
 
     logger.info("Open connection")
 
     channel.basic_publish(
         exchange="memes",
-        routing_key="memes",
+        routing_key="",
         body=pickle.dumps((meme, id)),
-        properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE),
     )
     connection.close()
     logger.info("Close connection")
@@ -69,4 +68,4 @@ async def get_meme_rating(id: int):
     if id > MEME_ID:
         return 0
     db = redis.Redis()
-    return db.get(id)
+    return int(db.get(id))
