@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+  broker:
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+    expose:
+      - "5672"
+
+  db:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    command: redis-server --save 20 1 --loglevel warning
